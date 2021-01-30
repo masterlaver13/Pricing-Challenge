@@ -4,18 +4,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- displays site properly based on user's device -->
+
+  <link rel="stylesheet" href="mobilestyle.css">
+  <link rel="stylesheet" href="desktopstyle.css">
   <link rel="stylesheet" href="rangeslider.css">
+  <link rel="stylesheet" href="toggle.css">
+
   <link rel="icon" type="image/png" sizes="32x32" href="./images/favicon-32x32.png">
 
   <title>Frontend Mentor | Interactive pricing component</title>
 
   <script type="text/javascript">
+    function init() {
+      SliderChange(document.getElementById('slider').value);
+      orderChildren();
+    }
+
+    function orderChildren() {
+      var screenw = window.screen.width;
+      let childNode = document.getElementById('two').childNodes;
+
+      if (screenw >= 1440) {
+        if (childNode[11].className == "pricing") {
+          childNode[11].parentNode.insertBefore(childNode[11], childNode[4]);
+        }
+      }
+
+      if (screenw < 1440) {
+        if (childNode[4].className == "pricing") {
+          childNode[4].parentNode.insertBefore(childNode[4], childNode[12]);
+        }
+      }
+
+    }
+
     function SliderChange(value) {
       document.getElementById('selector').style.left = value + '%';
       document.getElementById('progress').style.width = value + '%';
 
-      let pv;
+      let yearly = document.getElementById('toggle').checked;
+      var pv;
       var price;
+
 
       switch (value) {
         case "0":
@@ -42,162 +72,82 @@
           break;
       }
 
-
+      if (yearly) price -= (price / 100) * 25;
       document.getElementById('pageviews').innerHTML = pv;
       document.getElementById('price').innerHTML = '$' + price.toFixed(2);
 
     }
   </script>
 
-  <!-- Feel free to remove these styles or customise in your own stylesheet 👍 -->
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@600;800&display=swap');
-
-    body {
-      font-size: 15px;
-      font-family: 'Manrope', sans-serif;
-      background: hsl(230, 100%, 99%);
-      color: hsl(225, 20%, 60%);
-    }
-
-    .title {
-      font-size: 1.4em;
-      text-align: center;
-      color: hsl(227, 35%, 25%);
-      font-weight: 800;
-    }
-
-    .wrapper {
-      width: 100%;
-      margin-top: 20%;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .info {
-      color: hsl(225, 20%, 60%);
-      font-size: 0.9em;
-      font-weight: 600;
-    }
-
-    .pageviews {
-      display: block;
-      text-align: center;
-      margin-top: 20%;
-      color: hsl(225, 20%, 60%);
-      font-size: 0.9em;
-      font-weight: 600;
-      letter-spacing: 2px;
-    }
-
-
-
-    .blillings {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-around;
-    }
-
-    .pricing {
-      background: hsl (0, 0%, 100%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-
-    }
-
-    .pricing span {
-      margin-left: 10px;
-    }
-
-    #price {
-      color: hsl(227, 35%, 25%);
-      font-weight: 800;
-      font-size: 2.4em;
-    }
-
-    .pros {
-      display: table;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .btn {
-      background-color: hsl(227, 35%, 25%);
-      text-decoration: none;
-      border: none;
-      border-radius: 20px;
-      width: 40%;
-      height: 40px;
-      display: block;
-      margin: auto;
-      color: hsl(226, 100%, 87%);
-      font-weight: bold;
-      outline: none;
-
-    }
-
-    .visible {
-      display: none;
-    }
-  </style>
 </head>
 
-<body onload="SliderChange(document.getElementById('slider').value)">
+<body onload="init()" onresize="init()">
 
   <div class="wrapper">
-    <!-- Tiltle kind of thing, the "logo" -->
-    <h1 class="title">Simple, traffic-based pricing</h1>
+    <!-- FIRST PART -->
+    <div id="one">
+      <!-- Tiltle kind of thing, the "logo" -->
+      <h1 class="title">Simple, traffic-based pricing</h1>
 
-    <!-- Some information -->
-    <center class="info">Sign-up for our 30-day trial.</center>
-    <center class="info">No credit card required.</center>
-
-    <!-- Pageviews, value of the slider -->
-    <strong class="pageviews">
-      <span id="pageviews"></span> PAGEVIEWS
-    </strong>
-
-    <!-- Slider -->
-    <div class="slider">
-      <input type="range" id="slider" min="0" max="100" value="50" step="25" oninput="SliderChange(this.value);">
-      <div id="selector">
-        <div id="selectbg"></div>
+      <!-- Some information -->
+      <div style="position: absolute; left: 50%; transform: translateX(-50%);">
+        <span class="info">Sign-up for our 30-day trial.</span>
+        <span class="info">No credit card required.</span>
       </div>
-      <div id="progress"></div>
     </div>
 
-    <!-- Result of sliding component, the price -->
-    <div class="pricing">
-      <span id="price"></span>
-      <span>/ month</span>
+    <!-- SECOND PART -->
+    <div id="two">
+      <!-- Pageviews, value of the slider -->
+      <strong class="pageviews">
+        <span id="pageviews"></span> PAGEVIEWS
+      </strong>
+
+      <!-- Slider -->
+      <div class="slider">
+        <input type="range" id="slider" min="0" max="100" value="50" step="25" oninput="SliderChange(this.value);">
+        <div id="selector">
+          <div id="selectbg"></div>
+        </div>
+        <div id="progress"></div>
+      </div>
+
+      <!-- Result of sliding component, the price -->
+      <div class="pricing">
+        <span id="price"></span>
+        <span>/ month</span>
+      </div>
     </div>
 
+    <!-- THIRD PART -->
+    <div id="three">
+      <!-- Toggle and blilling -->
+      <div class="billings">
+        <p>Monthly Billing</p>
+        <input type="checkbox" id="toggle" oninput="SliderChange(document.getElementById('slider').value)"><label id="togglelabel" for="toggle"></label>
 
-    <!-- Toggle and blilling -->
-    <div class="blillings">
-      <p>Monthly Billing</p>
-      <input type="checkbox">
-
-      <p>Yearly Billing
-        <span style="color: hsl(15, 100%, 70%); background: hsl(14, 92%, 95%);">
-          <span class="visible">-</span>25% <span class="visible">discount</span>
-        </span>
-      </p>
+        <p>Yearly Billing
+          <span style="color: hsl(15, 100%, 70%); background: hsl(14, 92%, 95%); font-size: 0.8em;">
+            <span id="minus">-</span>25% <span id="discount">discount</span>
+          </span>
+        </p>
+      </div>
     </div>
 
-    <!-- Pros of hte offer -->
-    <div class="pros">
-      <ul>
-        <li>Unlimited websites</li>
-        <li>100% data ownership</li>
-        <li>Email reports</li>
-      </ul>
-    </div>
+    <!-- FOURTH PART -->
+    <div id="four">
+      <!-- Pros of hte offer -->
+      <div class="pros">
+        <ol>
+          <li>Unlimited websites</li>
+          <li>100% data ownership</li>
+          <li>Email reports</li>
+        </ol>
+      </div>
 
-    <!-- Button which provides to continuation of a trial -->
-    <button type="button" class="btn">Start my trial</button>
+      <!-- Button which provides to continuation of a trial -->
+      <button type="button" class="btn">Start my trial</button>
+    </div>
   </div>
 
 
